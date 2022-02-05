@@ -1,5 +1,6 @@
 import React from 'react';
 import { Platform, Pressable, StyleSheet, Text } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 function truncate(text) {
     const replaced = text.replace(/\n/g, ' ');
@@ -11,6 +12,12 @@ function truncate(text) {
 
 function FeedListItem({log}) {
     const {title, body, date} = log;
+    const navigation = useNavigation();
+    const onPress = () => {
+        navigation.navigate('Write', {
+            log,
+        });
+    };
 
     return(
         <Pressable
@@ -18,7 +25,8 @@ function FeedListItem({log}) {
             styles.block,
             Platform.OS === 'ios' && pressed && {backgroundColor: '#efefef'},
          ]}
-         android_ripple={{color: '#ededed'}}>
+         android_ripple={{color: '#ededed'}}
+         onPress={onPress}>
              <Text style={styles.date}>{new Date(date).toLocaleDateString()}</Text>
              <Text style={styles.title}>{title}</Text>
              <Text style={styles.body}>{truncate(body)}</Text>
