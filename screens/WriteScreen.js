@@ -12,13 +12,15 @@ function WriteScreen({route}) {
     const [title, setTitle] = useState(log?.title ?? '');
     const [body, setBody] = useState(log?.body ?? '');
     const navigation = useNavigation();
+    const [date, setDate] = useState(log ? new Date(log.date) : new Date());
+    // 피드를 통해서 왔을때는 피드의 날짜를, 그 외에는 현재날짜를 초깃값으로 지정해줌.
 
     const {onCreate, onModify, onRemove} = useContext(LogContext);
     const onSave = () => {
         if (log) {
             onModify({
                 id: log.id,
-                date: log.date,
+                date: date.toISOString(),
                 title,
                 body,
             });
@@ -26,7 +28,7 @@ function WriteScreen({route}) {
             onCreate({
                 title,
                 body,
-                date: new Date().toISOString(),
+                date: date.toISOString(),
             });
         }  
         navigation.pop();
@@ -60,6 +62,8 @@ function WriteScreen({route}) {
                  onSave={onSave}
                  onAskRemove={onAskRemove}
                  isEditing={!!log}
+                 date={date}
+                 onChangeDate={setDate}
                 />
                 <WriteEditor 
                  title={title}
